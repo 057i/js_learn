@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div class="name"></div>
+    <span id="px"></span>
+    <span id='pxpx'></span>
+    <span id="pxp"></span>
+    <script type="text/javascript">
+        function getStr(text){
+            var newText=text.slice(1);
+            var domList=[].slice.call(document.getElementsByTagName("*"));//这里必须是改用数组，不然报错！！！因为截出来的不是数组的话，没办法用筛选
+            //分别判断是Id还是class还是tag
+            if(text.indexOf("#")!=-1){
+                return domList.filter(function(ele,index,self){
+                    return ele.getAttribute('id')==newText        
+                })
+            }else if(text.indexOf(".")!=-1){
+                return domList.filter(function(ele,index,self){
+                    return ele.getAttribute('class')==newText
+                })
+            }else{
+                return domList.filter(function(ele,index,self){
+                    return ele.tagName==text.toUpperCase()//实现不管输入大写还是小写，都可以识别
+                })
+
+            }
+        }
+        getStr("#id");
+        getStr(".className")
+        getStr("div")
+
+
+    </script>
+    
+</body>
+</html>

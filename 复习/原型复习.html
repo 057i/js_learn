@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script type="text/javascript">
+    Person.prototype.name="hehe";
+    function Person(){
+
+    }
+    var person=new Person();
+    console.log(person.constructor);//对象.constructor返回的是谁构建了他,原型链自带constructor方法
+    console.log(person.__proto__);//对象.__proto__返回的是对象的原型链以及原型链上方法
+    console.log(Person.prototype);//函数.prototype返回的是函数的原型链以及原型链上方法
+    console.log(person)//返回的是构造他的这个函数
+
+
+
+
+    Person1.prototype.LastName="deng";
+    Person1.prototype.say=function(){
+        console.log("hehe");
+    }
+    function Person1(name,age,sex){
+        this.LastName="JI";
+        this.name=name;
+        this.age=age;
+        this.sex=sex;
+    }
+    var person2=new Person1();
+    var person3=new Person1("xuming",35,"male");
+    console.log(person2.LastName);//返回JI，自己身上有属性就用自己的，等自己身上没属性了再去原型链上去找
+    console.log(person3.name);//返回"xuming"
+
+
+
+
+    //编程思路：处在同一个原型链上的对象，如果他们有很多相同的属性，以及方法的时候，那么久可以使用原型链进行编程了
+    //这是高级编程
+    //例：
+    Car.prototype={
+        height:1400,
+        lang:4900,
+        carName:"BMW"
+    }
+    function Car(){
+
+    }
+    var car =new Car();
+    console.log(car.height);//照样可以使用
+    console.log(car.lang)
+    console.log(car.carName)
+
+
+    //不想要对象上的属性和方法 可以使用delete来删除他们
+    //???为什么在编辑器里删除不成功，只能在控制台去删除 
+    delete car.height
+    delete Car.prototype.height
+
+
+
+
+
+    // constructor可以手动修改
+    Person2.prototype.name="abc";
+    function Person2(){
+    }
+    Person2.prototype={
+        constructor : Car     //原本的构造指向Object，现在指向Car,但是该函数实例化的对象不能用Car上面的任何东西  
+    }
+    var person4=new Person2()
+    console.log(person4.constructor)//返回Car(){}
+    console.log(person4.height);//返回undefined,不能用
+    console.log(person4.lang)//返回undefined，不能用任何属性方法
+    //现在将原型链指向其他,constructor也会变成obj的__proto__，指向Object(修改对象的原型链)
+    var obj={
+        name:"sunny"
+    }
+    person4.__proto__=obj;//
+    console.log(person4.name)//返回sunny
+    console.log(person4.constructor)//返回Object
+    console.log(person4.__proto__)//返回obj的对象里面的内容
+
+
+
+    //修改构造函数的原型链上的属性方法
+    Person5.prototype.name="sunny";
+    function Person5(){}
+    var person5=new Person5();
+    console.log(person5.name);//返回sunny
+    Person5.prototype.name="cherry";
+    console.log(person5.name)//返回cherry
+
+
+
+    //修改原型链上空间（重点）
+    Person6.prototype.name="sunny";
+    function Person6(){}
+    var person6=new Person6();//在原型链空间被修改之前创建的，所以返回的是创建之前的那个原型链构造出来的对象
+    Person6.prototype={
+        name:"cherry"
+    }
+    console.log(person6.name)//返回的是sunny
+
+
+    //和上一个相同的例子
+    var obj={name:"a"};
+    var obj1=obj;
+    obj={name:'b'};//替换了一个空间，引用了其他空间，所以Object也算引用类型的一种
+    console.log(obj);//返回b
+    console.log(obj1);//返回a
+
+
+
+    //有prototype考虑执行顺序，首先是function函数提升，然后依次往下运行，prototype不需要提升，执行一行算一行
+    //构成一长串的原型链
+    Grand.prototype.lastName='deng';
+    function Grand(){}
+    var grand=new Grand();
+    Father.prototype=grand;
+    function Father(){
+        this.name='xuming';
+    }
+    var father=new Father();
+    Son.prototype=father;
+    function Son(){
+        this.hobbit='smoke'
+    }
+    var son=new Son();
+    console.log(son.name);//返回xuming
+    console.log(son.hobbit);//返回somke
+    console.log(son.__proto__)//返回Grand原型链以及Father原型链上所有方法的集合
+    console.log(son.toString)
+    // Grand.prototype.__proto__===Object.prototype恒等于，Object.prototype是原型链的顶端
+
+
+
+
+
+    //原型链方法重写
+    Grand1.prototype.lastName='deng';
+    function Grand1(){}
+    var grand1=new Grand1();
+    Father1.prototype=grand1;
+    function Father1(){
+        this.name='xuming',
+        this.fortune={
+            card1:'visa'
+        }
+    }
+    var father1=new Father1();
+    Son1.prototype=father1;
+    function Son1(){
+        this.hobbit='smoke';
+    }
+    var son1=new Son1()
+    console.log(son1.fortune);//返回card1:"visa",继承自原型链的Father
+    son1.fortune=200;
+    console.log(son1.fortune);//返回200，改变了继承来的fortune对象类型为值类型，覆盖掉了card1，但是对原型链不影响
+    console.log(father1.fortune);////返回card1:"visa",继承自原型链的Father
+    
+
+
+
+
+    //this指向:谁调this,this就指向谁
+    Person7.prototype={
+        name:'a',
+        sayName:function(){
+            console.log(this.name)
+        }
+    }
+    function Person7(){
+        this.name='b';
+    }
+    var person7=new Person7();
+    person7.sayName();//返回b，因为函数中自己有name属性，所以不用去原型链上再去找属性
+    Person7.prototype.sayName();//返回a，因为sayName调用自身，所以从自身prototype中去找属性
+
+
+    //如果封装一个函数有输出但是无缘无故返回了一个undefined，那么可能是没有写return，所以返回了一个 return undefined
+
+    var obj2={};
+    var obj3=new Object();
+    console.log(obj2.__proto__===Object.prototype)//返回true,绝大多数对象都继承自Object.prototype
+
+
+    //方法重写的意思是：能找到相同名字的方法，然后对这个方法的功能进行改写
+    //重写原型链上方法
+    Person8.prototype={
+        toString:function(){
+            return 'hehe'
+        }
+    }
+    function Person8(){}
+    var person8=new Person8();
+    console.log(person8.toString());//
+
+
+    //还可以从Object.prototype入手，因为Person8.prototype是Object,所以
+    // Object.prototype.toString=function(){
+    //     return 'haha'
+    // }
+    function Person9(){}
+    var person9=new Person9();
+    console.log(person9.toString());//返回haha，重写成功   
+
+
+
+
+    //封装一个可以判断复杂数据类型的方法，除此之外，还可以使用A instanceof(B)来判断A是否由B构造的，从而判断出类型
+    function check(obj){
+        if(Object.prototype.toString.call(obj)=='[object Object]'){
+            console.log("Object类型");
+        }else if(Object.prototype.toString.call(obj)=='[object Array]'){
+            console.log("Array类型");
+        }else if(Object.prototype.toString.call(obj)=='[object Number]'){
+            console.log("Number类型")
+        }else if(Object.prototype.toString.call(obj)=='[object String]'){
+            console.log("String类型")            
+        }else if(Object.prototype.toString.call(obj)=='[object Boolean]'){
+            console.log("Boolean类型")            
+        }else if(Object.prototype.toString.call(obj)=='[object Undefined]'){
+            console.log("Undefined类型")             
+        }else if(Object.prototype.toString.call(obj)=='[object Null]'){
+            console.log("Null类型")         
+        }
+    
+    }
+
+
+
+
+    //用call和apply改变this指向，唯一的区别是，call传入的是每个参数，apply传入一个数组
+    function Person10(name,age){
+        this.name=name;
+        this.ag=age;
+    }
+    var person10=new Person10('cheng',300);//这里如果不写new，this指向的是window,如果使用了new,this才会指向person10(重点)
+    var obj4={}
+    Person10.call(obj4,'deng',300);//改变this指向，意思就是让obj4使用了Person10上的所有属性和方法，括号里第一位写谁去调用(this指向谁)，后面接每个参数
+    console.log(obj4.name);//返回'deng'
+    console.log(obj4.age);//返回100
+
+
+
+
+
+
+
+    //call的用法:适用于多个函数存在共同的参数时候可以使用call方法
+    function Person11(name,age,sex){
+        this.name=name;
+        this.age=age;
+        this.sex=sex;
+    }
+    function Student(name,age,sex,tel,grade){
+        Person11.call(this,name,age,sex);
+        this.tel=tel;
+        this.grade=grade;
+    }
+    var person11=new Student('wang',50,'male',110,8)
+
+
+
+
+    //call应用2
+    function Wheel(wheelSize,style){
+        this.style=style;
+        this.wheelSize=wheelSize;
+    }
+    function Sit(c,sitColor){
+        this.c=c;
+        this.sitColor=sitColor;
+    }
+    function Model(height,width,len){
+        this.height=height;
+        this.width=width;
+        this.len=len;
+    }
+    function Car(wheelSize,style,c,sitColor,height,width,len){
+        Wheel.call(this,wheelSize,style);//调用Wheel的方法，在一个函数里面使用另一个函数的函数体，用call方法
+        Sit.call(this,c,sitColor);//调用Sit方法
+        Model.call(this,height,width,len);//调用Model方法
+    }
+    var car1=new Car(100,'花里胡哨','真皮','red',1800,1900,4900);//这里如果不是new，那么上面所有的this都是指向window
+    console.log(car1.wheelSize);//返回100
+
+
+
+
+
+
+
+    //共享原型就是Son.prototype=Father.prototype
+
+
+
+
+
+
+
+    //闭包思想
+    function Deng(name,wife){
+        var prepareWife='xiaozhang';//这个属性是自己私有的(闭包)，只有自己才能看得到，只有自身的方法才能访问的到，外部访问不到
+        this.name=name;
+        this.wife=wife;
+        this.divorce=function(){
+            this.wife=prepareWife;
+        }
+        this.changePrepareWife=function(Target){
+            prepareWife=Target;
+        }
+        this.sayPrepareWife=function(){
+            console.log(prepareWife);
+        }
+    }
+    var deng=new Deng('deng','xiaoliu')
+    console.log(deng.wife);//返回"xiaoliu"
+
+
+
+
+
+
+    //实现链式调用(重点)
+    var deng={
+        smoke:function(){
+            console.log('smoking');
+            return this//可以返回到上一级，所以可以不停调用
+        },
+        drink:function(){
+            console.log('drinking');
+            return this
+        },
+        perm:function(){
+            console.log('permming');
+            return this
+        }
+    }    
+    deng.smoke().drink().perm();//返回smoking drinking permming
+
+
+
+
+
+
+
+    //obj.prop=obj[prop],所以这里可以使用属性，但是在很多时候obj[prop]更加的好用，所以引入了一个属性拼接的方式
+    var deng1={
+        wife1:{name:'xiaoliu'},
+        wife2:{name:'xiaozhang'},
+        wife3:{name:'xiaomeng'},
+        wife4:{name:'xiaowang'},
+        sayWife:function(num){
+            console.log(this['wife'+num]);//属性拼接！！！
+        }
+    }
+
+
+    
+
+
+    //对象内属性的遍历一共有三种方式
+    //1.hasOwnProperty------------obj.hasOwnProperty(prop)//判断这个属性以及方法是自己的还是原型链的
+    //2.in--------for(var prop in obj) 对对象内进行遍历
+    //3.instanceof------------A instanceof B，判断A是否由B构造函数构造出来的
+
+
+
+    //
+    var obj5={
+        name:'13',
+        age:123,
+        sex:'male',
+        height:175,
+        weight:80,
+        prop:100
+    }
+    for(var prop in obj5){
+        console.log(prop+":"+obj5[prop]);//遍历obj
+    }
+    console.log(obj5['prop']);//区别一下obj5[prop]和obj5['prop'],没引号的是访问自己定义的变量，有引号的是访问对象内特定的属性
+    console.log(obj5 instanceof Object);//返回True,判断obj是否由Obj构造函数构造出来的
+
+
+    var obj6={
+        name:'13',
+        age:123,
+        sex:'male',
+        height:175,
+        weight:80,
+        prop:100,
+        __proto__:{
+            lastName:'deng'
+        },
+        grade:{
+            grade:1
+        }
+    }
+    Object.prototype.abc='456';//for...in理论可以返回本身和原型链上属性以及方法，但是如果将这个原型链延伸到Object.prototype上面，这个规则就会失效，只会打印系统的不会打印自带的(特例！！！)
+    for(var prop in obj6){
+        if(!obj6.hasOwnProperty(prop)){//返回并非自身的(原型链上的)属性方法
+        console.log(obj6[prop]);            
+        }
+    }
+
+    for(var prop in obj6){
+        if(obj6.hasOwnProperty(prop)){//返回自身的(非原型链上的)属性方法
+            console.log(obj6[prop])
+        }
+    }
+//
+    </script>
+</body>
+</html>

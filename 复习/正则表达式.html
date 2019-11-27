@@ -1,0 +1,39 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+    </head>
+    <body>
+        
+        <script type="text/javascript"> 
+        <!--RegExp正则表达式-->
+
+        //  <!--正则表达式字面量创建-->
+        var reg=/abc/;
+        var reg=/Abc/i;   //i的意思是ignore忽略大小写
+        var str="abcDabc";
+        // 可以用正则表达式中有一个test方法用来测试是否匹配的上表达式,必须是和表达式相同的，只能多，不能少
+        reg.test(str);//返回true
+
+        // 对象创建方法
+        var reg1=new RegExp("abc","i");//恒等于var reg1=/abc/i;
+        // str.match()
+
+
+
+        var reg2=/[0-9][0-9][0-9]/g;
+        var str1="45646fds534354fsd543543fs2313";
+        console.log(str1.match(reg2));
+        
+
+
+
+
+
+        
+        </script>
+    </body>
+    </html>

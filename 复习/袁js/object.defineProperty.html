@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var obj = {
+        a: "aaa",
+        b: "lll"
+    }
+    //给对象成员配置属性（存取描述符）
+    // Object.defineProperty(obj, "a", {
+    //     get: function () {
+    //         console.log("读取属性", obj)
+    //         return 8
+    //     },
+    //     set: function (val) {
+    //         console.log("给属性赋值为" + val)
+    //     }
+    // })
+    // obj.a = 3;//调用了set的方法
+    // console.log(obj.a)//然后调用了set的方法，返回a最终的结果是8
+
+
+    // Object.defineProperty在函数中使用
+    function User(name, age) {
+        this.name = name;
+        var _age;
+        Object.defineProperty(this, "age", {
+            get: function () {
+                return _age
+            },
+            set: function (val) {
+                console.log("正在设置age值")
+               if (val < 0) {
+                    val = 0;
+                } else if (val > 100) {
+                    val = 100;
+                }
+                _age = val
+            }
+        })
+        this.age = age
+    }
+
+    var u = new User("abc", -1)//正在设置age值
+    u.age = u.age + 1000;//正在设置age值
+    console.log(u.age)//100
+
+</script>
+
+</body>
+</html>

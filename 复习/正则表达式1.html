@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+
+
+
+    <!--match返回的是类数组-->
+
+    <script type="text/javascript">
+    // 例子
+        var reg=/abce/;
+        var str="abcde";
+        console.log(reg.test(str));
+    
+
+
+        var reg1=new RegExp("abc","g");
+        console.log(reg1.test(str));
+
+        var reg2=/abce/;
+        var str2="ABCed";
+        console.log(reg.test(str));
+
+        //不加g是只匹配一个
+        var reg3=/ab/;
+        var str3="abababab";
+        console.log(str3.match(reg3));
+
+        //加g是匹配全部，返回"ab""ab""ab""ab"
+        var reg4=/ab/g;
+        var str4="abababab";
+        console.log(str4.match(reg4));
+
+
+        
+        var reg5=/[0-9A-z][cd][d]/g;
+        var str5="ab1cd";
+        console.log(str.match(reg5));
+
+
+        var reg6=/^a/g;
+        var str6="abcdea";
+        console.log(str6.match(reg6))
+
+
+        var reg7=/[^a][^b]/g;
+        var str="ab1cd";
+        console.log(str.match(reg7));
+
+        
+        var reg8=/(abc|bcd)/g;
+        var str8="abc";
+        console.log(str8.match(reg8));
+
+
+        //reg9是前面和后面的结合
+        var reg9=/(abc|bcd)[0-9]/g;
+        var str9="bcd2";
+        console.log(str9.match(reg9));  
+
+
+        // \w代表的是wrld，完全等于[0-9A-z]
+        //  \W===[^\w]，大写的\W等同于\w
+
+        var reg10=/\wcd2/;
+        var str10="bcd2";
+        console.log(str10.match(reg10))
+
+
+
+        var reg11=/\Wcd2/;
+        var str11="b*cd2";
+        console.log(str11.match(reg11))
+
+        var reg12=/\wcd2/;
+        var str12="bcd2";
+        console.log(str12.match(reg12))
+
+
+        //\d===[0-9],\D===[^\d]===[^0-9]
+
+        var res13=/[\w\d]/;
+        var str13="s";
+        console.log(str13.match(res13));
+
+
+        //\b===单词边界，\B===[^\b]表示为非单词边界
+        var reg14=/\bcde/g;
+        var str14="abc cde fgh"
+        console.log(str14.match(reg14))//返回"cde"
+        var reg15=/\bc/g;
+        var str15="abc cde fgh"
+        console.log(str15.match(reg15))//返回"c"
+
+
+        //前面要一个单词边界，后面也要一个单词边界的情况
+        var reg16=/\bcde\b/g;
+        var str16="abc cde fgh";
+        console.log(str16.match(reg16))//返回"cde"
+
+
+        //前面要一个单词边界后面不要单词边界的情况
+        var reg17=/\bcde\B/g;
+        var str17="abc cdefgh"
+        console.log(str17.match(reg17));
+
+
+        
+        // 特殊空白字符串的特殊处理
+        // 错误写法
+        var reg18=/\tc/g;
+        var str18="abc    cdefgh";
+        console.log(str.match(reg18))//会返回undefined
+
+        //正确写法
+        var reg19=/\tcde/g;
+        var str19="abc\tcdefgh";
+        console.log(str19.match(reg19))
+
+        //\s表示的是空白字符，[\s]===[\t\r\n\v\f],[\S]===[^\s]
+
+
+
+        //多行匹配
+        var reg20=/^a/g;
+        var str20="abcde\na"
+        console.log(str20.match(reg20))//原本应该返回"a""a"但是却返回了"a",因为多加了一个换行符\n，把后面的a推倒下一行所以匹配不到了；
+
+        //解决方法
+        var reg21=/^a/gm;
+        var str21="abcde\na"
+        console.log(str21.match(reg21))
+
+
+        // 匹配以什么结尾的用$,比如以e结尾的，就是$e
+        var reg22=/abcd$/g;
+        var str22="abcded";
+        console.log(str22.match(reg22))//返回null，因为str21不是以d结尾的
+
+        var reg23=/ed$/g;
+        var str23="abcded";
+        console.log(str23.match(reg23))//返回"ed"
+
+        // n+匹配后面至少包含一个n的字符串，这个变量可以出现1次到无数次，但是至少会出现一次
+        var reg24=/\w+/g;
+        var str24="abc";
+        console.log(str24.match(reg24))
+
+        //n*匹配任何包含0个或多个n的字符串，这个变量可以出现0次到无数次，可以0次
+        var reg25=/\w*/g;
+        var str25="abc";
+        console.log(str25.match(reg25));
+
+        //会报错，+*不可以一起用
+        // var reg26=/\w+*/g;
+        // var str26="abcabc";
+        // console.log(str26.match(reg26))
+
+        var reg27=/\d*/g;
+        var str27="abc";
+        console.log(str27.match(reg27));//因为匹配不到，返回"""""""",四个空字符串，表示每个单词边界
+
+
+        //正则表达式有一个贪婪原则用来匹配+和*，只能多不能少
+        var reg28=/\w*/g;
+        var str28="aaaaaaaaaaaaa";
+        console.log(str28.match(reg28));
+
+        //n{3},匹配有三个n组成的字符串
+        var reg29=/\w{3}/g;
+        var str29="aaaaaaaaaaaa";
+        console.log(str29.match(reg29));
+
+        //n{3,5}用来匹配由3-5个n组成的字符串，如果没有5个，再用3个或者4个组。最少不能低于5个，最多不能超过5个
+        var reg30=/\w{3,5}/g;
+        var str30="aaaaaaaaa";
+        console.log(str30.match(reg30));
+
+
+        //n{1,}只写1，后面不写，匹配1到无穷个字符串;n{2,}这样匹配2到无穷个这样的字符串
+        var reg31=/\w{1,}/g;
+        var str31="abcded";
+        console.log(str31.match(reg31));
+
+
+        //匹配以abc打头,以abc结尾的字符串
+        var reg32=/^abc$/;
+        var str32="abc";
+        console.log(str32.match(reg32));
+
+        //匹配首有数字或者尾有数字
+        var reg33=/^\d|\d$/g;
+        var str33="123abc";
+        console.log(str33.match(reg33))//返回"1"
+
+        //匹配字符串首尾都有数字
+        var reg35=/^\d[\s\S]*\d$/g;
+        var str35="123abc123";
+        console.log(str35.match(reg35));
+        console.log(reg35.exec(str35))
+
+    
+
+        //用表达式去匹配字符串,游标超出长度后第一次是null,第二次就是又从0开始走了
+        var reg36=/ab/g;
+        var str36="ababab";
+        console.log(reg36.exec(str36))
+        console.log(reg36.lastIndex)
+        console.log(reg36.exec(str36))
+        console.log(reg36.lastIndex)        
+        console.log(reg36.exec(str36))
+        console.log(reg36.lastIndex)        
+        console.log(reg36.exec(str36))
+        console.log(reg36.lastIndex)        
+        console.log(reg36.exec(str36))
+        console.log(reg36.lastIndex) 
+        console.log(reg36.exec(str36))
+        console.log(reg36.lastIndex)         
+
+
+        //把游标归0的情况
+        var reg37=/ab/g;
+        var str37="ababab";
+        console.log(reg37.exec(str37));
+        console.log(reg37.lastIndex);
+        reg37.lastIndex=0;//将游标归零后,会在下一圈继续执行之前的代码，依次匹配
+        console.log(reg37.exec(str37))
+        console.log(reg37.lastIndex)
+
+
+        //注意，如果使用exec,就必须追加g修饰符，否则游标一直会是在0的状态不动
+        var reg38=/ab/;
+        var str38="ababab";
+        console.log(reg38.exec(str38));//返回"ab",因为没有加g修饰符，只会匹配一个，如果加了g修饰符，游标就会动了
+        console.log(reg38.lastIndex)
+
+
+
+        //反向引用子表达式
+        //利用反向表达式取出多个一模一样的字符串
+        var str42="aaaa";
+        var reg39=/(a)/g;
+        var reg40=/(a)\1/g;//匹配出第二个字符和第一个一模一样的
+        var reg42=/(\w)\1\1\1/g;//匹配出第二个第三个第四个和第一个一模一样的world类型
+        
+        console.log(reg40.exec(str42))//???输出"aa","a"
+        console.log(str42.match(reg40))
+        console.log(str42.match(reg42))
+
+
+
+        // var reg41=/(a)\1\1\1/g;//匹配出第二个第三个第四个和第一个a一模一样的
+        // console.log(reg42.exec(str42))
+
+
+        //反向引用子表达式
+        var reg43=/(\w)\1(\w)\2/;//   (\w)\1是反向引用第一个表达式里的内容，(\w)\2是反向引用第二个表达式里面的内容
+        var str43="aabb";
+        console.log(str43.match(reg43));//返回aabb
+        console.log(reg43.exec(str43))//返回aabb,也可以匹配，不加g修饰符不改变index而已
+
+
+
+
+
+
+
+
+        //正则常用方法之search方法(其实是String类型上面的方法)，返回值只要不是-1都是匹配成功的
+        var reg44=/(\w)\1(\w)\2/g;
+        var str44="aabb";
+        console.log(str44.search(reg44));//返回0，匹配成功
+
+
+        var reg45=/(\w)\1(\w)\2/g;
+        var str45="edbaabbbbee";
+        console.log(str45.search(reg45))//返回3匹配成功
+
+
+        var reg46=/(\w)\1(\w)\2/;
+        var str46="abc";
+        console.log(str46.search(reg46));//返回-1，匹配不成功
+
+
+        //正则常用方法之split拆分方法(也是String类型上面的方法)，将字符串分割为字符串数组
+        var str47="gnsjkdgnjksdkjjjjfdsfdsfdsjjjffsdfdfdffffsdfsderew";
+        var reg47=/(\w)\1/g;
+        console.log(str47.split(reg47))
+
+
+
+        //正则表达式之replace方法（常用）
+        var str48="aa";
+        console.log(str48.replace("a","b"));//希望返回bb却返回ba，因为没有匹配全局的能力，而正则表达式有匹配全局的能力
+        var reg48=/a/g;
+        console.log(str48.replace(reg48,"b"));//先把全部要匹配的东西匹配出来，然后replace
+
+
+        //replace做逆序输出
+        var str49="aabb";
+        var reg49=/(\w)\1(\w)\2/g;
+        console.log(str49.replace(reg49,"$2$2$1$1"));//这里的$1$2就是反向引用
+        console.log(str49.replace(reg49,function($,$1,$2){
+            return $2+$2+$1+$1
+        }))
+
+
+        //应用：将the-first-name改为小驼峰式写法
+        var str50="the-first-name";
+        var reg50=/-(\w)/g;
+        console.log(str50.replace(reg50,function($,$1){
+            console.log($1)
+            return $1.toUpperCase();//先将反向引用的第一项匹配出来，然后再用String上面的toUpperCase()方法
+        }))
+
+
+        
+        //正向预查，正向断言：     ？=n表示匹配任何后面跟着n的字符串，但是输出时n不参与输出
+                            //   ？!n表示匹配后面不跟n的字符串，输出时n不参与输出
+
+
+        var str51="abaaa";
+        var reg51=/a(?=b)/g;//匹配a后面跟着的是b的a
+        console.log(str51.match(reg51));//返回一个类数组a
+
+
+
+        var str52="abaaa";
+        var reg52=/a(?!b)/g;//匹配a后面跟着不是b的a
+        console.log(str52.match(reg52));
+
+
+    //n+ n*这两个都是贪婪匹配(匹配出来的只多不少)，将他们改为非贪婪匹配只少不多,在量词后面加一个?
+        var str53="aaaaa";
+        var reg53=/a+?/g;
+        console.log(str53.match(reg53));//返回"a", "a", "a", "a", "a"
+        var reg54=/a{1,3}?/g;//因为加问号是取消贪婪匹配，取少不取多
+        console.log(str53.match(reg54))
+        var reg55=/a??/g;//两个问号就是取0不取1
+        console.log(str53.match(reg55))
+
+
+
+        //去重案例
+        var str56="aaaaaaaaaaabbbbbbbbbbbbcccccccccccc";
+        var reg56=/(\w)\1*/g;
+        console.log(str56.replace(reg56,function($,$1){
+            return $1
+        }))
+        console.log(str56.replace(reg56,"$1"))
+
+
+        //百度14年最后一题，将100000000000每三位添加一个,
+        var str57="100000000000";
+        var reg57=/(?=(\B)(\d{3})+$)/g;
+        console.log(str57.replace(reg57,"."))
+
+
+
+
+
+
+
+    </script>
+</body>
+</html>

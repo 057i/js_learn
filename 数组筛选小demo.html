@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .wrapper {
+            width: 400px;
+            border: 1px solid #666;
+            border-radius: 4px;
+            margin: 100px auto 0;
+            overflow: hidden;
+        }
+
+        .wrapper .sWraprer {
+            width: 100%;
+            height: 50px;
+            padding-top: 25px;
+            padding-left: 15px;
+
+        }
+
+        .wrapper .sWraprer input {
+            display: inline-block;
+            width: 210px;
+            height: 30px;
+            border-radius: 4px;
+            border: 1px solid #999;
+        }
+
+        .btn {
+            margin-left: 10px;
+            cursor: pointer;
+            color: deepskyblue;
+        }
+
+        .active {
+            color: white;
+            background-color: deepskyblue;
+            border-radius: 4px;
+        }
+
+        .wrapper .cWrapper ul {
+            /* position: relative; */
+            width: 400px;
+
+        }
+
+        .wrapper .cWrapper .name {
+            position: relative;
+            width: 400px;
+            height: 50px;
+            left: 15px;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            color: #333;
+            border-bottom: 1px solid #333;
+        }
+
+        .imgsize {
+            /* background: url("./img/timg.jpg") no-repeat; */
+            /* background-size: 50px 50px; */
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            position: absolute;
+        }
+
+        p {
+            padding-left: 55px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="sWraprer">
+            <input type="text" class="sCon">
+            <span class='btn' sex='m'>Male</span>
+            <span class='btn' sex='f'>Female</span>
+            <span class='btn' sex='a'>All</span>
+        </div>
+        <ul class="cWrapper">
+            <!-- <li class="name">
+                <img src="" alt="">
+                <p class="title">1111111111111111</p>
+                <p class="title1">111111111111</p>
+            </li>
+            <li class="name">
+                <img src="" alt="">
+                <p class="title"></p>
+                <p class="title1"></p>
+            </li>
+            <li class="name">
+                <img src="" alt="">
+                <p class="title"></p>
+                <p class="title1"></p>
+            </li>
+            <li class="name">
+                <img src="" alt="">
+                <p class="title"></p>
+                <p class="title1"></p>
+            </li>
+            <li class="name">
+                <img src="" alt="">
+                <p class="title"></p>
+                <p class="title1"></p>
+            </li> -->
+        </ul>
+    </div>
+    <script type="text/javascript">
+        var personArr = [
+            { name: '王港', src: './img/timg.jpg', des: '颈椎不好', sex: 'm', age: 20 },
+            { name: '刘莹', src: './img/timg.jpg', des: '我是谁', sex: 'f', age: 25 },
+            { name: '王秀莹', src: './img/timg.jpg', des: '我很好看', sex: 'f', age: 40 },
+            { name: '刘金雷', src: './img/timg.jpg', des: '你没有见过陌生的脸', sex: 'm', age: 15 },
+            { name: '刘飞翔', src: './img/timg.jpg', des: '瓜皮刘', sex: 'm', age: 18 }
+        ];
+
+        //学会模块化处理，一个功能一个函数，不要冗余
+
+        //数据渲染函数        
+        function randerTree(date) {
+            var htmlStr = "";
+            date.forEach(function (ele, index, self) {//利用循环数组然后再用字符拼接方式做，连接成功后再把这一串的html代码嵌入到页面中去（innerHtml）
+                htmlStr = htmlStr + '<li class="name"><img src="' + ele.src + '" class="imgsize"><p class="title">' + ele.name + '</p><p class="title1">' + ele.des + '</p></li>';
+                //上面这样的写法更简便，可以学一下
+                // htmlStr+=HtmlStr;
+                // console.log(ele);
+                oUI.innerHTML = htmlStr
+            }, { dataLog: 1111111 })
+        }
+        //创建一个更改样式的函数，存储现在点击的小按钮和上一次点击的小按钮，当这一次点击后，当前按钮就变成过去
+        function changeActive(curActiveBtn) {
+            curActiveBtn.className = "active btn";
+            lastActiceBtn.className = "btn";
+            lastActiceBtn = curActiveBtn;
+        }
+        //按照姓名搜索函数
+        function searchByText(date, searchText) {
+            if (searchText == '') {//判断，如果字符串为空，返回原始数据
+                return date
+            } else {
+                return date.filter(function (ele, index, self) {
+                    if ((ele.name).indexOf(searchText) != -1)
+                        return true
+                })
+            }
+        }
+        //按照性别搜索函数
+        function searchBySex(date, sexText) {
+            if (sexText == 'a') {
+                return date
+            } else {
+                return date.filter(function (ele, index, self) {
+                    if (ele.sex == sexText) {
+                        return true
+                    }
+                })
+            }
+        }
+
+        //初始化要用到的变量，初始化渲染
+        var oUI = document.getElementsByClassName("cWrapper")[0];
+        var searchText = '';
+        var con = document.getElementsByClassName("sCon")[0];
+        var btnArr = [].slice.call(document.getElementsByClassName("btn"), 0);//为了把他变成数组
+        randerTree(personArr);
+
+
+        //点击按钮时
+        btnArr[2].className = 'active';
+        var lastActiceBtn = btnArr[2];//用lastBtn来保存当默认的sexBtn
+        btnArr.forEach(function (ele, index, self) {
+            ele.onclick = function () {
+                changeActive(this);//点击一次改变一次
+                searchText == '' ? randerTree(searchBySex(personArr, this.getAttribute('sex'))) : randerTree(searchBySex(searchByText(personArr, searchText), this.getAttribute('sex')));
+                //判断全局搜索关键字是否为空，为空就不使用关键字判断，不为空就使用关键字判断
+            }
+        })
+
+
+        //这里的输入要做一个防抖，在一段时间内只执行一次
+        //搜索框输入数据时
+        con.oninput = debounce(handleInput, 1000)
+
+        function handleInput() {
+            console.log(123)
+            searchText = this.value;
+            // console.log(searchText)
+            searchByText == "" ? '' :
+                randerTree(searchByText(searchBySex(personArr, lastActiceBtn.getAttribute('sex')), searchText));//条件累加，因为lastBtn保存的是当前点击的btn，然后筛选出来的数据                                                                                       //再用输入框里面的数据来筛选一下，就是想要的数据了
+        }
+
+
+        //防抖
+        function debounce(handle, wait) {
+            var timer = null;
+            return function () {
+                var self = this;
+                var _args = arguments;
+                clearTimeout(timer)
+                timer = setTimeout(function () {
+                    handle.apply(self, _args)
+                }, wait)
+            }
+        }
+
+        //节流
+        function throttle(handle, wait) {
+            var lastTime = 0;
+            return function () {
+                console.log(this,lastTime)
+                var nowTime = new Date().getTime();
+                if (nowTime - lastTime > wait) {
+
+                    handle.apply(this, arguments)
+                    lastTime = nowTime
+
+                }
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>

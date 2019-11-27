@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        .content{
+            width:200px;
+            height: 200px;
+            background:orange;
+            position: absolute;
+        }
+        button{
+            position: absolute;
+            top:250px;
+            left:50px;
+        }
+        </style>
+</head>
+<body>
+    <div class="content"></div>
+    <button>move</button>
+    <script>
+        //只要记住要将移动元素设置成position:absolute就好了
+        var con=document.getElementsByClassName("content")[0];
+        var btn=document.getElementsByTagName("button")[0];
+        var timer=null,flag=true;
+        var speed=10;
+        btn.onclick=function(){
+             timer=setInterval(function(){
+                 speed+=10
+                con.style.left=speed+"px";
+            },20)
+        }
+    </script>
+</body>
+</html>

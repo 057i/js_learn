@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>拖动运动</title>
+</head>
+<style>
+    div{
+        position: absolute;
+        width:150px;
+        height:150px;
+        background:deepskyblue;
+        left:0;
+        top:0;
+    }
+</style>
+<body>
+<div></div>
+<script type="text/javascript">
+    var div=document.getElementsByTagName("div")[0];
+    var timer,nowX=0,nowY=0,SpeedX=0,SpeedY=0,lastX=0,lastY=0;
+    //     ,lock=true;
+    // div.addEventListener("mousedown",function (e) {
+    //     var disX=e.clientX,
+    //         disY=e.clientY;
+    //     // div.style.left=div.offsetLeft-disX+"px";
+    //     // div.style.top=disY+"px"
+    //     // console.log(e)
+    //     document.addEventListener("mousemove",mouseMove,false);
+    //     div.addEventListener("mouseup",function () {
+    //         document.removeEventListener("mousemove",mouseMove,false);
+    //     },false);
+    // },false);
+    // function mouseMove(e) {
+    //         e=e||window.event;//鼠标拖动用事件做，利用事件的e.client
+    //         div.style.left=e.clientX+"px";
+    //         div.style.top=e.clientY+"px";
+    //         console.log(e)
+    // }
+    div.onmousedown=function(e){
+        var event=event||e;
+        var disX=event.clientX-this.offsetLeft,//计算事件源离左边有多远
+            disY=event.clientY-this.offsetTop;//计算事件源离top有多远
+        var self=this;
+        document.onmousemove=function(e){
+            var event=event||e;
+            var newLeft=e.clientX-disX,//然后再用移动到的位置减去事件源加上left
+                newTop=e.clientY-disY;
+                SpeedX=newLeft-lastX;
+                SpeedY=newTop-lastY;
+                lastX=newLeft;
+                lastY=newTop
+            // var oSpan=document.createElement("span");
+            // oSpan.style.position="absolute";
+            // oSpan.style.width="5px";
+            // oSpan.style.height="5px";
+            // oSpan.style.left=newLeft+'px';
+            // oSpan.style.top=newTop+'px';
+            // oSpan.style.backgroundColor='blue'
+            // document.body.appendChild(oSpan)
+
+            self.style.left=newLeft+"px";
+            self.style.top=newTop+"px";
+
+        }
+        document.onmouseup=function () {
+            document.onmousemove=null;
+            document.onmouseup=null;
+            startMove(self,SpeedX,SpeedY);
+        }
+    }
+    function startMove(dom,iSpeedX,iSpeedY) {
+        clearInterval(dom,timer)
+        var a=0,b=0,u=0.8,g=5;
+        dom.timer=setInterval(function () {
+            iSpeedY+=g
+            a=dom.offsetLeft+iSpeedX;
+            b=dom.offsetTop+iSpeedY;
+            dom.style.left=a+"px";
+            dom.style.top=b+"px";
+            if(a+dom.clientWidth>=window.innerWidth){
+                iSpeedX*=(-1);
+                iSpeedX*=u;
+                iSpeedY*=u;
+                a=window.innerWidth-dom.clientWidth;
+            }
+            if(a<0){
+                iSpeedX*=(-1);
+                iSpeedX*=u;
+                iSpeedY*=u;
+                a=window.innerHeight-dom.clientWidth;
+            }
+            if(b+dom.clientHeight>=window.innerHeight){
+                iSpeedY*=(-1);
+                iSpeedX*=u;
+                iSpeedY*=u;
+                b=window.innerHeight-dom.clientHeight;
+            }
+            if(b+dom.clientHeight<=0){
+                iSpeedY*=(-1);
+                iSpeedX*=u;
+                iSpeedY*=u;
+                b=window.innerHeight-dom.clientHeight;
+            }
+            if(Math.abs(iSpeedY)<2){
+                iSpeedY=0;
+            }
+            if(Math.abs(iSpeedX)<2){
+                iSpeed=0;
+            }
+            if(iSpeedX==0 && iSpeedY==0 && window.innerHeight-(b+dom.clientHeight)<5){
+                clearInterval(dom.timer);
+            }else{
+                dom.style.left=a+"px";
+                dom.style.top=b+"px";
+
+            }
+
+
+
+
+
+            // console.log(iSpeedX,iSpeedY,window.innerWidth-a-dom.clientWidth,window.innerHeight-b-dom.clientHeight)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        })
+        
+
+    }
+
+
+
+
+
+
+
+</script>
+</body>
+</html>

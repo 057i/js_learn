@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        //数组两种创建,字面量创建可以包含小数，但是构造函数创建不可以包含小数
+        var arr=['1','2','3','4','5',10.2];
+        var arr1=new Array('1','2','3','4','5');//构造函数创建
+        console.log(Array('a','b').toString());//可以这么使用
+        
+        var arr2=[10];
+        arr2[10]='abcd';
+        console.log(arr2);//输出 [10, empty × 9, "abcd"]
+
+
+        var arr3=[,,,,,];
+        console.log(arr3.length);
+        console.log(arr3[3]);//返回undefined,用逗号当做占位，但是不会返回空字符串''!!!
+
+        var arr4=new Array(8);//数组两种创建方式的唯一区别就是当数组使用构造函数创建出来且只传了一个值，那么这个数组就会把这个值当成是这个数组的长度
+        console.log(arr4.length);//返回8
+        
+
+
+
+        //数组的方法分为两种
+        //一种会改变原数组值，分别有reverse,sort,push,pop,unshift,shift,splice共7中方法
+        //第二种不会改变原数组值，分别是forEach,filter,map,reduce,reduceRight,slice,concat,join,split,toString共10种
+
+
+        //push()用来添加数据，可以添加一个，也可以多个,添加后会自动返回数组长度
+        var arr5=[];
+        arr5.push('a','b','c');//返回3
+
+        //重写push方法返回值
+        // Array.prototype.push=function(){
+        //     return 'hhhhh'//覆盖了之前方法，之前方法的功能都将失效！！！！！只返回一个hhhhhh
+        // }
+
+
+        //pop()方法，去掉最后一位元素，括号里不传参，传参数也会省略
+        var arr6=[1,2,3,4,5];
+        arr6.pop();
+        console.log(arr6);//返回[1, 2, 3, 4]
+        arr6.pop(5);
+        console.log(arr6);//返回[1,2,3]
+
+
+        //unshift()是向数组第一位插入东西
+        var arr7=['as','bs','cs'];
+        arr7.unshift('ds');
+        console.log(arr7);//返回["ds", "as", "bs", "cs"]
+
+
+        //shift()是从数组第一位开始减少一位，括号里传参自动忽略
+        var arr8=['as','bs','cs'];
+        arr8.shift();
+        console.log(arr8);
+
+        //reverse(),逆反
+        var arr9=['as','bs','cs'];
+        arr9.reverse()//按照逆序输出
+        console.log(arr9);
+
+
+        //splice是剪切方法，和slice要区分开，splice对原数组产生影响，slice对原数组不产生影响（splice有既可以只剪切又可以剪切后插入）
+        var arr10=[1,1,2,2,3,3];
+        arr10.splice(1,3);//从第一位剪切到第三位
+        console.log(arr10);//返回1,3,3
+        var arr11=[9,8,7,6,5,4,3,2];
+        arr11.splice(1,4,5,5,5,6);//从第一位剪到第四位，然后在数组减去的地方插入剩下的参数
+        console.log(arr11);//返回[9, 5, 5, 5, 6, 4, 3, 2]
+
+        //sort方法按照ascii码排序，会改变原数组
+        var arr12=[1,2,3,4,5,10,20];
+        arr12.sort();
+        console.log(arr12);//返回[1, 10, 2, 20, 3, 4, 5]
+
+
+        //利用sort()进行冒泡排序(重点看！！！)
+        var arr13=[1,2,3,4,5,10,20];
+        arr13.sort(function(a,b){
+            if(a>b){
+                return 1   //这里的return和一般的return不同，这里的retur返回的是位置！！！！（也可以return a-b）
+            }else{
+                return -1//或者把升序记成a-b，降序记成b-a，这就是sort预留的缺口
+            }
+        })
+
+
+
+        //例：给三个对象，按照他们的年龄做升序返回，可以数组的sort()方法做
+        var cheng={
+            name:'cheng',
+            age:18,
+            sex:'male',
+            face:'handsome'
+        }
+        var deng={
+            name:'deng',
+            age:40,
+            sex:undefined,
+            face:'amazing'
+        }
+        var zhang={
+            name:'zh*ang',
+            age:20,
+            sex:'male'
+        }
+        var arr14=[cheng,deng,zhang];
+        arr14.sort(function(a,b){
+            if(a.age>b.age){
+                return 1
+            }else{
+                return-1
+            }
+
+        })
+        console.log(arr14);//返回 0：{name: "cheng", age: 18, sex: "male", face: "handsome"}
+                                //1: {name: "zhang", age: 20, sex: "male"}
+                                //2: {name: "deng", age: 40, sex: undefined, face: "amazing"}
+
+        //给一个随机的字符串数组，然后按数组的长度从小到大返回(同样的道理)
+        var arr15=['sdfds','fsdfdsfdsfs','fdsfdsfsd','fsfrewrewrewrew','fsdfsrewrew'];
+        arr15.sort(function(a,b){
+            if(a.length>b.length){
+                return 1
+            }else{
+                return -1
+            }
+        })
+        console.log(arr15);//返回["sdfds", "fdsfdsfsd", "fsdfsrewrew", "fsdfdsfdsfs", "fsfrewrewrewrew"]
+
+
+        //拓展：只要是做排序的话，统统都用冒泡做，然后冒泡利用sort方法做，利用预留的接口
+
+
+        //中英文字符串按照字节长度排序
+        function retBytes(str){   //定义一个函数用来匹配中文字符串函数，中文字符长度比英文多1
+            var num=str.length;
+            for(var i=0;i<str.length;i++){
+                if(str.charCodeAt(i)>255){//如果大于255就是中文
+                    num++;
+                }
+            }
+            return num
+        }
+        var arr16=['fnsdjkds老','哈健身房比较大撒','哦婆婆家那可能是nkjfsnd','分局核实fsdfdss客户反馈就是'];
+        arr16.sort(function(a,b){
+            return retBytes(a)-retBytes(b)
+        })
+        console.log(arr16);// ["fnsdjkds老", "哈健身房比较大撒", "哦婆婆家那可能是nkjfsnd", "分局核实fsdfdss客户反馈就是"]
+
+
+
+
+        //从这里开始就是不改变原数组的方法了
+        //concat方法，连接两个数组后返回连接后的值
+        var arr17=[1,2,3,4,5];
+        var arr18=[78,89,5,2,4];
+        console.log(arr17.concat(arr18));//返回[1, 2, 3, 4, 5, 78, 89, 5, 2, 4]
+        console.log(arr17);//返回[1, 2, 3, 4, 5]
+
+
+
+        //toString是把数组当做是一串字符串展示
+        console.log(arr18.toString());//返回"78,89,5,2,4"
+
+
+
+        //slice方法是截取不改变原数组，括号里写一个参数，就是从该位截取到最后一位；写两个参数就是从第一位参数截取到第二位参数
+        var arr19=[9,1,2,3,4,5,6];
+        var arr20=arr19.slice(1,4);
+        console.log(arr20);//返回[1, 2, 3]，从第一位截取到第四位
+
+
+        //join和split是一对互逆的操作不印象原数组，join是连接数组，在数组元素之间添加东西使之成为一串字符串；而split是拆分
+                                            //字符串之间按照什么东西拆分成数组！！！
+        var arr21=['a','vv','ds','dsaw','dswewrew'];
+        var arr22=arr21.join("-");
+        console.log(arr22);//返回a-vv-ds-dsaw-dswewrew
+        console.log(arr22.split('-'))//返回["a", "vv", "ds", "dsaw", "dswewrew"]
+
+
+
+        //类数组：类数组只是一个长得像数组，但是没有数组所拥有的方法的东西,类数组的原型链的_proto__是object
+        var obj={          //类数组长这个样子，数组没有索引，类数组有索引
+            "0":'a',
+            "1":'b',
+            "2":'c',
+            "length":3,
+            "push":Array.prototype.push
+        }
+        obj.push('d');
+        console.log(obj);//返回 {0: "a", 1: "b", 2: "c", 3: "d", 4: "d", length: 5, push: ƒ}
+
+
+        //数组的push方法
+        Array.prototype=function(target){
+            this[this.length]=target;
+            this.length++;
+        }
+
+        //阿里巴巴题：这个类数组长什么样！！！（重点）
+        var obj1={
+            "2":'a',
+            "3":'b',
+            "length":2,
+            "push":Array.prototype.push
+        }
+        obj1.push('c');//这个c赋值给索引为2的元素
+        obj1.push('d');//这个d赋值给索引为3的元素
+
+
+
+        //封装一个typeof方法,先分类，原始值和引用值，然后在做
+     
+        Object.prototype.typeof1=function(Target){
+            var toStr=Object.prototype.toString;
+            var index={
+            "[object Array]":'array',
+            "[object Object]":'object',
+            "[object Number]":'number',
+            "[object String]":'String',
+            "[object Boolean]":'boolean'
+        }
+            if(typeof(Target)!='object' && typeof(Target)!=null){
+                return typeof(Target);
+            }else if(typeof(Target)=='object' && toStr.call(Target)=='[object Null]'){
+                return null
+            }else{
+                var att=toStr.call(Target)
+                return index[att]
+                
+            }
+        }
+
+
+
+
+        //数组去重
+        var obj2={
+            name:123,
+            name:456,//在一个对象中不可以有重复名字的元素，如果有，同名元素后一个值覆盖前一个
+            sex:'male'
+        }
+
+        //所以借助这个特点来做数组去重!!!
+        var arr23=[1,1,1,1,2,2,2,2,3,4,5,2,4,7,5,6,8,4,5];
+        Array.prototype.unique=function(){
+            var obj3={};
+            var resultArr=[];
+            for(var i=0;i<this.length;i++){
+                 if(!obj3[this[i]]){//判断对象某个索引位的值存不存在，不存在的话继续执行
+                    obj3[this[i]]=this[i];
+                    resultArr.push(this[i]);
+                }
+            }
+                return resultArr
+        }
+
+
+        //字符串去重,将字符串改为数组做
+        var str1="gfdnjigfdsnokoiresoresporjogflkdgmnfdlkmnvclkgbmnlfdlkgmfdlkjgblkgfddlkfoitfdjglkfd";
+        var arr24=str1.split("")
+        str1=arr24.unique().join("");
+        
+    </script>
+</body>
+</html>

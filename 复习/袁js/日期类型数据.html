@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //1.编写一个函数：用于返回一个友好的日期字符串格式
+    function returnDate(date) {
+        var year = date.getFullYear().toString();
+        var month = (date.getMonth() + 1).toString().padStart(2, "0");
+        var day = date.getDate().toString().padStart(2, "0");
+        var hour = date.getHours().toString().padStart(2, "0");
+        var minute = date.getMinutes().toString().padStart(2, "0");
+        var second = date.getSeconds().toString().padStart(2, "0");
+        return `${year}-${month}-${day}  ${hour}:${minute}:${second}`
+    }
+
+    console.log(returnDate(new Date()))
+
+
+    //计算今年几岁
+    function computedBirth(year, month, day) {
+        var now = new Date();
+        var thisYearBirth = new Date(now.getFullYear(), month - 1, day)
+        var diff = now.getFullYear() - year;
+        if (thisYearBirth > now) {
+            diff--
+        }
+        return `${diff}岁`
+    }
+
+
+    //面试题
+    //计算还有几天生日
+    function toBirth(year, month, day) {
+        var now = new Date()
+        var thisYearBirth = new Date(now.getFullYear(), month - 1, day)
+        if (thisYearBirth < now) {//今年生日已经过了
+            var temp = thisYearBirth.setFullYear(thisYearBirth.getFullYear() + 1)
+            thisYearBirth = temp
+        }
+
+        var diff = thisYearBirth - now;
+        var diffDay = Math.ceil(diff / (24 * 60 * 60 * 1000))
+        return diffDay
+    }
+
+
+    //循环本月日期和星期（思路是将月份设置成下个月第一天，减去1天）
+    function printDate() {
+        var now = new Date()
+        var year = now.getFullYear();
+        var month = now.getMonth() + 1;
+        var days = new Date(now.getFullYear(), now.getMonth() + 1, 1, -1).getDate()//下个月第一天
+        for (var i = 0; i < days; i++) {
+            var time = new Date(year, month, i).getDay();
+            console.log(`${year}-${month.toString().padStart(2, "0")}-${i.toString().padStart(2, "0")},星期${time+1}`)
+        }
+    }
+
+
+</script>
+
+
+</body>
+</html>

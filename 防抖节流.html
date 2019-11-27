@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <span id="show">0</span>
+    <button id="btn">click</button>
+    <input type="text" id="inp">
+
+    <script type="text/javascript">
+        // 防抖是经过一段时间才执行一次
+        // 节流是不论在一段时间需要执行多少次，只执行一次
+        var oDiv=document.getElementById("show");
+        var oBtn=document.getElementById("btn");
+        function throttle(handler,wait){
+            var lastTime=0;
+            return function(e){//函数中可以创一个e用来表示事件，用法和监听事件一样
+                console.log(e)
+                var nowTime=new Date().getTime();
+                if(nowTime-lastTime>wait){
+                    console.log(arguments)
+                    handler.apply(this,arguments)
+                    lastTime=nowTime;
+                }
+            }
+        }  
+        function buy(e){
+            console.log(this,e);
+            oDiv.innerText=parseInt(oDiv.innerText)+1   
+        }
+        oBtn.onclick=throttle(buy,300)
+
+
+
+
+        //防抖代码
+        // var oInp=document.getElementById("inp");
+        // var timer=null;
+        // function ajax(e){
+        //     console.log(e,this.value);
+        // }
+        // oInp.oninput=debounce(ajax,1000)
+
+        // function debounce(handler,dealy){
+        //     var timer=null;
+        //     return function(){
+        //         console.log(this)//这里的this指向谁调用它创建它
+        //         var _self=this,_arg=arguments;//这里要保存一下谁调用的和参数，要不然后面要用的时候找不到
+        //         clearInterval(timer);//再清除一下定时器
+        //         timer=setInterval(function(){
+        //             handler.apply(_self,_arg);//改变this指向到处理函数
+        //         },3000)
+        //     }
+        // }
+        
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </script>
+    
+</body>
+</html>

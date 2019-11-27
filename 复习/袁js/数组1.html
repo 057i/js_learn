@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var arr = [1, 2, 3, 4, 5, 6, -1, -2, -3, -4, -5, -6]
+
+    var result = arr.filter(function (ele, index) {
+        return ele > 0
+    }).map(function (ele, index) {
+        var temp = ele ** 2
+        return temp
+    }).map(function (ele, index) {
+        return ele *= 2
+    }).reduce(function (ele, lastEle) {
+        return ele + lastEle
+    })
+    console.log(result)
+
+</script>
+
+</body>
+</html>

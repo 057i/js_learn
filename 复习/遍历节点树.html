@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+    <div>
+        <span></span>
+        <div>
+            <a href=""></a>
+            <form action="">
+                <input type="text">
+            </form>
+            <p class="five">
+                <input type="text">
+                <a href="">
+                    <p>
+                        <blockquote></blockquote>
+                    </p>
+                </a>
+            </p>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var div = document.getElementsByTagName("div")[0];
+        div.setAttribute("class", "demo");
+
+
+        // 节点树的关系方法一共有6种，分别是，parentNode,firstChild,lastChild,nextSibling,previousSibling,childNodes,
+        console.log(div.childNodes.length)//返回5，因为Node有包括注释节点，换行节点，空格节点,有嵌套关系的一整个嵌套关系只算一个长度
+        console.log(div.firstChild);//返回#text，是第一个节点(换行)
+        console.log(div.lastChild);//返回#text，是最后一个节点（也是换行）
+        console.log(div.parentNode);//返回<body></body>,是父级节点
+        console.log(div.childNodes);//返回子节点们，按顺序分别是#text,span,#text,div,#text
+        console.log(div.nextSibling);//返回#text,下一个兄弟节点
+        console.log(div.previousSibling);//返回#text,前一个兄弟节点
+        console.log(div.children);//返回span和div,children只返回div下的子标签元素，如果是空字符或者换行，注释，嵌套在子标签元素中的一律不返回
+        console.log(div.children.length);//返回25
+        console.log(div.childElementCount);//等于div.children.length
+
+
+        // 每个节点元素都有四个属性：nodeName大写的节点标签名，nodeType节点类型，nodeValue节点值,attribute节点属性集(比如class,id)
+        console.log(div.nodeName);//返回DIV
+        console.log(div.nodeType);//返回1，因为类型1是标签
+        console.log(div.nodeValue);//返回空
+        console.log(div.attributes);//属性
+
+
+
+
+
+
+
+        //对比：这里开始是元素的方法
+        console.log(div.parentElement);//返回<body></body>，返回父级元素
+        console.log(div.children);//返回[span,div]，将子元素打包成一个数组
+        console.log(div.children[0]);//<span></span>返回第一个子元素
+        console.log(div.firstElementChild);//<span></span>返回
+        console.log(div.lastElementChild);//<div></div>
+        console.log(div.previousElementSibling);//返回空，因为div前面没有兄弟元素了
+        console.log(div.nextElementSibling);//返回<script></、script>//
+
+        //获取元素属性时用getAttribute(),设置用setAttribute(),
+        div.setAttribute("id", "page");
+        console.log(div.getAttribute("id"));//返回page
+        console.log(div.getAttribute("class"));//返回demo
+
+
+
+
+
+
+
+
+
+        //封装一个方法，不用children，可以和children同效果
+        function returnChild(dom) {
+            var len = dom.childNodes.length;
+            var targetArr = [];
+            for (var i = 0; i < len; i++) {
+                if (dom.childNodes[i].nodeType == 1) {
+                    targetArr.push(dom.childNodes[i])
+                }
+            }
+            return targetArr
+        }
+        var arr = returnChild(div);
+        console.log(arr);//返回[span, div]，方法不唯一
+
+
+        //封装一个方法，返回e的第n层祖先元素，方法不限
+        function returnParent(dom, n) {
+            while (dom && n) {
+                dom = dom.parentElement;
+                n--;
+            }
+            return dom
+        }
+        var arr1 = returnParent(div, 1)
+
+
+        //封装一个函数，如果n为正，返回这个元素后的第n个兄弟元素，如果为负，返回这个元素前面的第n个兄弟元素
+        function returnBrother(dom, n) {
+            while (dom && n) {//思路：循环判断dom和n是否存在，然后用n判断是前几个还是后几个兄弟元素
+                if (n > 0) {
+                    dom = dom.nextElementSibling;
+                    n--
+                    console.log(dom)
+                } else {
+                    dom = dom.previousElementSibling
+                    n++
+                }
+            }
+            return dom
+        }
+        var arr3 = returnBrother(div, 1);
+        var arr4 = returnBrother(div, -1)
+
+
+        //不用hasChildren（)方法，封装一个myChildren,有就返回true，没有就返回false
+        Element.prototype.myChild = function () {
+            for (var i = 0; i < this.childNodes.length; i++) {
+                if (this.childNodes[i].nodeType === 1) {
+                    return true
+                }
+            }
+            return false
+        }
+        var boo = div.myChild();
+
+
+
+        var i = document.createElement("a");
+        var list = document.createTextNode("list");//文本元素
+        var com = document.createComment("hhhhh");//注释元素
+        // i.appendChild(list);//appendChild是先来后到的顺序
+        i.appendChild(com)
+        i.insertBefore(list, com);//在i中把list插到com之前
+
+        //封装一个类似的元素方法，insertAfter
+        Element.prototype.insertAfter = function (insertTarget, beforeTarget) {
+            if (beforeTarget.nextElementSibling == null) {
+                this.appendChild(insertTarget);//插入元素不能直接赋值，要使用appendChild
+            } else {
+                beforeTarget = beforeTarget.nextElementSibling;//注意：这里只要写一个nextElementSibling,因为如果写两个的话会产生偏移，如果后面第二个是空元素的话，那个空元素后的也是空元素
+                this.insertBefore(insertTarget, beforeTarget);//意义不大
+            }
+        }
+        var tr = document.createElement("div");
+        i.insertAfter(tr, list);
+        // i.insertAfter(tr,tr)
+
+
+
+
+
+        //封装一个将元素内的元素逆序的方法
+        Element.prototype.reverseElem = function () {
+            var len = this.children.length;
+            // var a=[]
+            for (var i = len - 1; i >= 0; i--) {
+                this.appendChild(this.children[i]);//顺序是先进后出
+            }
+            console.log(this)
+            return this
+        }
+        div.reverseElem();
+
+
+
+        //封装一个remove();使得child.remove()可以销毁自身
+        Element.prototype.remove = function () {
+            var father = this.parentNode;
+            father.removeChild(this);//这个removeChild也可以当做是剪切用
+            console.log('succeed');
+        }
+        // div.remove();
+
+
+        //innerHTML和innerText的用法;区别是innerHTML可以直接把HTML代码用内联样式写入；innerText只能写入文本
+        var p = document.getElementsByTagName("p")[0];
+        p.innerHTML = '<span>直接写H5</span>';//可以直接写HTML代码
+        var span2 = document.getElementsByTagName("span")[1];
+        span2.innerText = '显示文本';//只能写文本
+
+
+        //setAttribute和getAttributte,设置属性和获取属性,行间样式可以设置系统没有的，获取也可以获取的到
+        p.setAttribute("data-log", "fell");
+        console.log(p.getAttribute("data-log"));//返回fell
+        console.log(p.getAttribute("class"));//返回five
+
+
+
+        //封装ClassName
+        function getClassName1(className) {
+            var tarObj = []
+            if (document.getElementsByClassName) {//如果浏览器有getElementsByClassName方的话就用自带的
+                tarObj = document.getElementsByClassName(className)
+            } else {
+                var obj = document.getElementsByTagName("*");//没有的话就用通用的，TagName方法是通用的，将所有标签取出，然后找className是需要的就好了
+                for (var i = 0; i < obj.length; i++) {
+                    if (obj[i].className == className) {
+                        tarObj.push(obj[i])
+                    }
+                }
+            }
+            return tarObj
+        }
+
+        //相同的方法也可以封装ById
+        function getIdName(IdName) {
+            var target
+            if (document.getElementById) {
+                target = document.getElementById(IdName)
+            } else {
+                var obj = document.getElementsByTagName("*");
+                for (var i = 0; i < obj.length; i++) {
+                    if (obj[i].id == IdName) {
+                        target = obj[i];
+                        break
+                    }
+                }
+            }
+            return target
+        }
+
+
+
+        //封装getAttribute,这里是元素节点方法和节点方法轮着用，节点的四大属性有一个属性是attributes，这是一个对象，里面放着属性名(name)以及属性值(value),利用这一点
+        //就可以写出封装attribute
+        Element.prototype.getAttribute1 = function (attributeName) {
+            var target;
+            var obj = document.getElementsByTagName("*");
+            for (var i = 0; i < obj.length; i++) {
+                for (var j = 0; j < obj[i].attributes.length; j++) {
+                    if (obj[i].attributes[j].name == attributeName) {
+                        target = obj[i].attributes[j].value
+                    }
+                }
+            }
+            return target
+        }
+
+        //封装setAttribute
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //获取某一个元素下的所有标签，做成对象返回
+
+        function getTags(dom) {
+            if (dom.nodeType != 1) {
+                return
+            }
+            var childs = dom.children;
+            var len = childs.length;
+            var targetObj = []
+            for (var i = 0; i < len; i++) {
+                if (childs[i].children.length > 0) {
+                    targetObj[i]=[]
+                    targetObj[i][0]=childs[i];
+                    targetObj[i].push(getTags(childs[i]))
+                }else{
+                    targetObj[i] = childs[i]
+                }
+            }
+            return targetObj
+
+        }
+
+
+
+
+
+
+
+
+
+
+        //拓展   Document是一个构造函数，构造出document,但是不能new
+
+        console.log(document.__proto__);//返回HTMLDocument
+        console.log(document.__proto__.__proto__);//Document
+        console.log(document.__proto__.__proto__.__proto__);//Node
+        console.log(document.__proto__.__proto__.__proto__.__proto__);//EventTarget
+        console.log(document.__proto__.__proto__.__proto__.__proto__.__proto__)//Object(){}
+        console.log(document.body.toString());//返回[object HTMLBodyElement]
+        console.log(document.head.toString());
+
+
+
+    //
+
+
+
+
+    </script>
+</body>
+
+</html>

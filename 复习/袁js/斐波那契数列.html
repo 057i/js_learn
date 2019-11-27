@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var len = prompt("请输入斐波那契数列长度");
+    if (len <= 0) {
+        console.log("数字太短了")
+    } else {
+        var arr = [];
+        for (var i = 0; i < len; i++) {
+            if (i == 0 || i == 1) {
+                arr[i] = 1
+            } else {
+                arr[i] = arr[i - 1] + arr[i - 2]
+            }
+        }
+        console.log(arr)
+    }
+
+
+    //    求二维数组对角线之和
+    var sum = 0;
+    var arr = [
+        [1, 3, 5, 7, 7],
+        [1, 7, 5, 7, 2],
+        [1, 2, 6, 7, 4],
+        [1, 3, 5, 4, 8],
+        [1, 9, 5, 0, 1]
+    ];
+
+    for (var i = 0; i < arr.length; i++) {
+        for (var j = 0; j < arr[i].length; j++) {
+            if (i == j || i + j == arr.length - 1) {
+                sum += arr[i][j]
+                console.log(arr[i][j])
+            }
+        }
+    }
+    console.log(sum)
+
+
+    //冒泡排序
+    var targetArr = [-1, -9, -7.8, 6, 0, 4, 546, 32, 765, 978, 95, 25]
+    for (var i = 0; i < targetArr.length ; i++) {
+        for (var j = 0; j < targetArr.length - i; j++) {//每一次排完序都少比较一位
+            if (targetArr[j] > targetArr[j+1]) {
+                var temp = targetArr[j]
+                targetArr[j] = targetArr[j+1]
+                targetArr[j+1] = temp
+            }
+        }
+    }
+
+
+</script>
+
+</body>
+</html>

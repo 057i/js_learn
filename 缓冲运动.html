@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .content {
+            width: 400px;
+            height: 100px;
+            background: greenyellow;
+            position: absolute;
+            top: 200px;
+            left: -320px;
+        }
+        .content span {
+            width: 80px;
+            height: 100px;
+            background: pink;
+            position: absolute;
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <span></span>
+    </div>
+    <script>
+        var con = document.getElementsByClassName("content")[0];
+        var area = document.getElementsByTagName("span")[0];
+        var timer=null,speed=0;
+        //封装一个可以兼容IE8及以下的获取样式的方法
+        function getStyle(dom, attr) {
+            if (window.getComputedStyle){
+                return window.getComputedStyle(dom,null)[attr];
+            }else{
+                return dom.currentStyle[attr];
+            }
+        }
+        //鼠标移入的时候触发划出事件
+        con.onmouseenter=function(){
+            startMove(this,0);
+
+        }
+        //鼠标移出时候触发移入事件
+        con.onmouseleave=function(){
+            startMove(this,-320);            
+        }
+        //封装一个运动函数，这里的DOM是要运动的节点，target是要运动到的目标值
+        //物体的速度，距离目标点越近，就越小。当到达目标点时，速度为0
+        function startMove(dom, target) {
+            clearInterval(timer);
+            timer=setInterval(function(){
+            speed=(target-dom.offsetLeft)/9;
+            speed=speed>0?Math.ceil(speed):Math.floor(speed);
+            if(Math.abs(target-dom.offsetLeft)<Math.abs(speed)){
+                dom.style.left=target+"px";                
+                clearInterval(timer);
+            }else{
+                dom.style.left=dom.offsetLeft+speed+"px";
+            }
+            },20)
+        }
+    </script>
+</body>
+
+</html>

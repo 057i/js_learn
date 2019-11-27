@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .right{
+            width:200px;
+            height: 200px;
+            position: absolute;
+            background:pink;
+        }
+        .left{/*两栏布局没定位的一边铺满一整行，但是是有定位的盖住没定位的*/
+            height: 200px;
+            background:orange;
+            margin-right:150px;/*往回缩150px*/
+        }
+
+        .wrapper{
+            width:100px;
+            height:100px;
+            background:black;
+            margin-left: 100px;
+            margin-top:100px;
+            /*border:1px solid red;土办法解决*/
+            /*overflow: hidden;*/
+        }
+        .content{
+            margin-top:250px;/*子元素垂直的margin-top比父元素大,会margin塌陷*/
+            /*margin-left: 200px;*/
+            width: 50px;
+            /*position: absolute;*/
+            height: 50px;
+            display: inline-block;
+            background-color: green;
+        }
+        .box1{
+            background: red;
+            margin-right: 100px;
+        }
+        .box2{
+            background:green;
+            margin-left:100px;
+            margin-bottom:100px;
+        }
+        .demo1{
+            margin-top:100px;
+            background-color: red;
+            margin-bottom:100px;
+            display: inline-block;
+        }
+        .demo2{
+            background-color: green;
+            margin-top:100px;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="right">444444444444444444</div><!--//对先出生的元素进行定位宽高赋值，后出生的只要设置高度，就会形成两栏布局-->
+<div class="left">45646</div>
+
+
+
+
+
+<!--margin塌陷-->
+<!--<div class="wrapper">-->
+    <!--<div class="content"></div>-->
+
+
+
+
+<!--&lt;!&ndash;margin合并&ndash;&gt;-->
+<!--<span class="box1">123</span>-->
+<!--<span class="box2">234</span>-->
+<!--<div class="demo1">1</div>-->
+<!--<div class="demo2">2</div>-->
+
+
+
+
+
+</div>
+</body>
+</html>

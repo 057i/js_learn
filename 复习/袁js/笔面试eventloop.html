@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 例1
+        // setTimeout(() => {
+        //     console.log(1)
+        // }, 0)
+        // Promise.resolve().then(() => {
+        //     console.log(2)
+        // })
+        // console.log(3)
+
+        // 3,2,1
+
+
+
+
+        //eventloop中的then带一个promise不返回情况，返回的promise会插队执行
+        // new Promise((resolve, reject) => {
+        //     console.log("promise1")
+        //     resolve()
+        // }).then(() => {
+        //     console.log("then11")
+        //     new Promise((resolve, reject) => {
+        //         console.log("promise2")
+        //         resolve()
+        //     }).then(() => {
+        //         console.log("then21")
+        //     }).then(() => {
+        //         console.log("then23")
+        //     })
+        // }).then(() => {
+        //     console.log("then12")
+        // })
+
+
+        //eventLoop在一个Promise的then中，不管是return Promise还是直接一个Promise
+        //都会插队执行
+        new Promise((resolve, reject) => {
+            console.log("promise1")
+            resolve()
+        }).then(() => {
+            console.log("then11")
+            return new Promise((resolve, reject) => {
+                console.log("promise2")
+                resolve()
+            }).then(() => {
+                console.log("then21")
+            }).then(() => {
+                console.log("then23")
+            })
+        }).then(() => {
+            console.log("then12")
+        })
+
+
+
+        // eventloop中的await相当于一步Promise的执行
+
+
+
+
+
+
+        //加强版
+        // async function async1() {
+        //     console.log("async1 start");
+
+        // eventloop中的await相当于一步Promise的执行
+
+        //     await async2();
+        //     console.log("async1 end");
+        // }
+
+        // async function async2() {
+        //     console.log('async2');
+        // }
+
+        // console.log("script start");
+
+        // setTimeout(function () {
+        //     console.log("settimeout");
+        // }, 0);
+
+        // async1();
+
+        // new Promise(function (resolve) {
+        //     console.log("promise1");
+        //     resolve();
+        // }).then(function () {
+        //     console.log("promise2");
+        // });
+
+        // console.log('script end');
+
+        // 执行顺序
+        // "script start"
+        //     > "async1 start"
+        //     > "async2"
+        //     > "promise1"
+        //     > "script end"
+        //     > "async1 end"
+        //     > "promise2"
+        //     > "settimeout"
+
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>

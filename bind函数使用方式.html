@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+
+
+    <button id="btn"></button>
+    <button id="btn1"></button>
+    <script type="text/javascript">
+
+    //单对象编程
+        var list={
+            init:function(){
+                console.log(this);//这里的this统统都指向list，this出来的变量都归list所有
+                this.ms='diyi';
+                this.dom=document.getElementById("btn");
+                this.bindEvent();
+            },
+            bindEvent:function(){
+                this.dom.onclick=this.showMessage.bind(this);//重点！！！这里是bind函数的使用，改变this指向，返回一个改变作用于的一个新对象
+            },
+            showMessage:function(){
+                console.log(this.ms);
+            }
+        }
+        list.init()
+
+
+        var list1={
+            init:function(){
+                this.ms='duyi';
+                this.dom=document.getElementById("btn1");
+                this.bindEvent();
+            },
+            bindEvent:function(){
+                this.dom.onclick=this.showMessage.bind(this,'hello','world');
+            },
+            showMessage:function(info1,info2,e){
+                console.log(this.ms,info1,info2);
+            }
+        }
+        list1.init();
+    
+    
+
+
+
+        //封装bind函数，利用call?????
+        Function.prototype.myBind=function(target){  //target用来保存this要指向的参数的位置
+            var self=this,args=[].slice.call(arguments,1);
+            return function(){
+                return self.apply(target,args);//然后用self用来改变参数用来去匹配target
+            }
+        }
+
+
+        var f={
+            x:5,
+            y:6,
+            z:7,
+            
+        }
+        function show(x,y){
+            x=this.x;
+            y=this.y;
+            // console.log(this.x,this.y,this.z)
+        }
+        var x=10,y=9,z=8;
+
+
+        function fc(){
+            console.log(this);
+            return function(){
+                console.log(this)
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+    
+    </script>    
+</body>
+
+</html>

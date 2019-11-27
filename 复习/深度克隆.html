@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function deepClone(Origin1, Target1) {
+            var Target1 = Target1 || {},//有就用你的，没有就用后面的
+                toStr = Object.prototype.toString,//简化后面的写法
+                arrStr = '[Object Array]';//简化对比
+            for (var prop in Origin1) {//从原始值拷贝到Target
+                if (Origin1.hasOwnProperty(prop)) {  //用hasOwnProperty是查看这个属性是不是原型上面的，返回false就是自身的
+                    if (typeof (Origin1[prop]) != 'null' && typeof (Origin1[prop]) == 'object') {//
+                        if (toStr.call(Origin1[prop]) == arrStr) {
+                            Target1[prop] = [];
+                        } else {
+                            Target1[prop] = {};
+                        }
+                        deepClone(Origin1[prop], Target1[prop]);
+                    } else {
+                        Target1[prop] = Origin1[prop];
+                    }
+                }
+            }
+            return Target1
+        }
+
+
+
+        function deepClone1(Origin, Target) {
+            var target = target || {},
+                toStr = Object.prototype.toString,
+                arrStr = '[Object Array]';
+            for (var prop in Origin) {
+                if (Origin.hasOwnProperty(prop)) {
+                    if (typeof (Origin[prop]) != null && typeof (Origin[prop]) == 'object') {
+                        if (toStr.call(Origin[prop]) == arrStr) {
+                            Target[prop] = [];
+                        } else {
+                            Target[prop] = {}
+                        }
+                        deepClone1(Origin[prop], Target[prop])
+                    } else {
+                        Target[prop] = Origin[prop]
+                    }
+                }
+            }
+            return Target
+        }
+
+
+        var obj3 = {}
+        deepClone1(obj2, obj3);
+        var obj2 = {
+            name: 'abc',
+            age: 123,
+            card: ['visa', 'master'],
+            wife: {
+                name: 'bcd',
+                son: {
+                    name: 'aaa'
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

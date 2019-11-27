@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script type="text/javascript">
+        // 核心是在一个函数中以参数形式传入一个函数，等函数自身的所有功能都执行完后，，再去跑回调函数
+        // 例1
+        function a(callback){
+            alert("我是parent函数a");
+            alert("调用回调函数");
+            callback();
+        }
+        function b(){
+            alert("我是回调函数b");
+        }
+        function c(){
+            alert("我是回调函数c");
+        }
+        function test(){
+            a(b);
+            a(c);
+        }
+
+        // 例2
+        function A(a,callback){
+            var b=callback;
+            alert(a+b);
+        }
+        function B(c){
+            return -c
+        }
+        A(4,B(3))//返回1 
+    
+
+        </script>
+
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <script type="text/javascript">
+        //数组里面包含对象
+        var personArr=[
+            {name:'王港',src:'./src/img/3.png',des:'颈椎不好',sex:'m',age:20},
+            {name:'刘莹',src:'./src/img/5.png',des:'我是谁',sex:'f',age:25},
+            {name:'王秀莹',src:'./src/img/4.png',des:'我很好看',sex:'f',age:40},
+            {name:'刘金雷',src:'./src/img/1.png',dex:'你没有见过陌生的脸',sex:'m',age:15},
+            {name:'刘飞翔',src:'./src/img/2.png',des:'瓜皮刘',sex:'m',age:18}
+            ];
+        //foreach是数组原型链上方法，数组名.forEach(function(ele,index,self){},documentgetElementsByTagName());
+        
+        //取出personArr数组中每个对象的名字
+        // personArr.forEach(function(ele,index,self){//ele指代当前位置的数组元素，index指代当前位置（索引），self指向这个数组
+        //     console.log(ele,index,self);
+        //     console.log(ele.name);//返回  王港 刘莹 王秀莹 刘金雷 刘飞翔
+        // })
+        //返回
+//  {name: "王港", src: "./src/img/3.png", des: "颈椎不好", sex: "m"} 0 (5) [{…}, {…}, {…}, {…}, {…}]
+//  {name: "刘莹", src: "./src/img/5.png", des: "我是谁", sex: "f"} 1 (5) [{…}, {…}, {…}, {…}, {…}]
+//  {name: "王秀莹", src: "./src/img/4.png", des: "我很好看", sex: "f"} 2 (5) [{…}, {…}, {…}, {…}, {…}]
+//  {name: "刘金雷", src: "./src/img/1.png", dex: "你没有见过陌生的脸", sex: "m"} 3 (5) [{…}, {…}, {…}, {…}, {…}]
+//  {name: "刘飞翔", src: "./src/img/2.png", des: "瓜皮刘", sex: "m"} 4 (5) [{…}, {…}, {…}, {…}, {…}]
+        
+        // foreach(function(ele,index,self){},this指向)           //高级版for循环，forEach()括号里有两个参数，一个是函数(ele代表元素，index代表下标，self代表数组自身)，一个是this指向
+        Array.prototype.myforEach=function(func){
+            var _arr=this,len=_arr.length,parm2=arguments[1]||window;//暂时保存一个变量用来保存arguments[1]
+            for(var i=0;i<len;i++){
+                func.apply(parm2,[_arr[i],i,_arr])//更改this指向，然后传入一个数组
+            }
+        }
+        //封装forEach
+        personArr.myforEach(function(ele,index,self){
+            this[index].innerText=ele.name;
+        },document.getElementsByTagName("li"))
+
+
+
+
+
+
+
+        //Filter 作用是遍历同时过滤 ，不会改变原数组
+        //数组名.filter(function(ele,index,self){},this指向)     函数里有两个参数，一个是函数(ele代表元素，index代表下标，self代表数组本省)，一个是this指向
+        var newArr=personArr.filter(function(ele,index,self){
+            // console.log(ele,index,self,this)   这里的this指向{name:'cst'}
+            if(ele.sex=='m'){//将用不到的全部过滤掉
+                return true   //重点！！！！filter返回值只返回true,而return false的不会返回
+            }else{
+                return false 
+            }
+
+        },{name:'cst'})
+
+
+        //封装filter
+        Array.prototype.myFilter=function(func){//整个func是作为一个条件去筛选的！！！！这里一定要认真看
+            var _arr=this,arr=[],len=_arr.length,parm2=arguments[1]||window;
+            for(var i=0;i<len;i++){
+                func.apply(parm2,[_arr[i],i,_arr])? arr.push(_arr[i]) : '';
+            }
+            return arr 
+        }
+        var newArr2=personArr.myFilter(function(ele,index,self){
+            if(ele.sex=='m'){
+                return true
+            }else{
+                return false
+            }
+        },{name:'cst'})
+
+
+
+        // indexOf和lastIndexOf,indexOf是用来查找在数组中出现的位置，而lastIndexOf是用来查找在数组中最后出现的位置
+        var newArr3='ndskjsdjsdhfsdhkfh';
+        console.log(newArr3.indexOf('hfs'))//返回当前元素的位置
+        console.log(newArr3.lastIndexOf('h'));//返回最后一个h元素的位置
+
+
+        // 数组中的map是遍历同时映射，例如
+        var newArr3=personArr.map(function(ele,index,self){
+            ele.name=ele.name+10;//在所有的ele.name后面加了一个10，增加了之后原数组变量也被污染了，要想解决这个问题，可以自己封装一个map方法然后使用深度克隆，
+            return ele
+        },{name:'cst'})
+
+
+        //封装map方法
+        Array.prototype.myMap=function(func){
+            var _arr=this,len=_arr.length,parme2=arguments[1]||window,newArr=[];
+            for(var i=0;i<len;i++){
+                newArr.push(func.apply(parme2,[_arr[i]],i,_arr))
+            }
+            return newArr
+        }
+        console.log(personArr.map(function(ele,index,self){
+            ele.name=ele.name+10;
+            return ele
+        },{name:'jc'}))
+
+
+//自己封装filter1
+        Array.prototype.filter1=function(func){
+            var _arr=this,len=_arr.length,newArr=[],parme2=arguments[1]||window;
+            for(var i=0;i<len;i++){
+                func.apply(parme2,[_arr[i],i,_arr])? newArr.push(_arr[i]):'';
+            }
+            return newArr
+        }
+        console.log(personArr.filter1(function(ele,index,self){
+            return ele.age>25
+        }),{name:'cst'});
+
+
+
+        // every方法，遍历每一个元素，必须是全部true才会每个都遍历，一遇到false就停止
+        var flag=personArr.every(function(ele,index,self){
+            if(ele.age>10){
+                return true
+            }else{
+                return false
+            }
+        },{name:'cst'});
+        console.log(flag);//打印true
+
+        var flag1=personArr.every(function(ele,index,self){
+            if(ele.age>10){
+                return true
+            }else{
+                return false
+            }
+        },{name:'cst'});
+        console.log(flag1);//打印false
+
+
+        //封装every方法
+        Array.prototype.myEvery=function(func){
+            var _arr=this,len=_arr.length,a=true,parme2=arguments[1]||window;
+            for(var i=0;i<len;i++){
+                func.apply(parme2,[_arr[i],i,_arr])?a=true:a=false;
+            }
+            return a
+        }
+        
+        var flag2=personArr.myEvery(function(ele,index,self){
+            return ele.age>30   //false,判断所有人的年龄都大于30吗
+        },{name:'cst'})
+
+
+
+        //重点但是不常用，reduce和reduceright,z这个是归并方法
+        var cookieStr="BAIDUID=77BA342C33B4B1EC36DA8B302DE7145D:FG=1; BIDUPSID=77BA342C33B4B1EC36DA8B302DE7145D; PSTM=1551974295; BD_UPN=12314353; ispeed_lsm=0; BD_HOME=1; sug=3; sugstore=0; ORIGIN=2; bdime=0; BDRCVFR[feWj1Vr5u3D]=I67x6TjHwwYf0; delPer=0; BD_CK_SAM=1; PSINO=7; H_PS_PSSID=26525_1460_21127_28607_28585_28558_28603_22157; H_PS_645EC=27f49kkFdqhxYGM7ZtGpHOz7GHoiKcpKYquO7aDUi2SUKcB8im2Y5Mj%2FoC8qv57obJJb; BDSVRTM=0"
+        var initialValue={name:'cst'};
+        var lastValue=personArr.reduce(function(prevValue,curValue,index,self){
+            console.log(prevValue,curValue,index,self)
+            return prevValue;
+        },initialValue);//会将inteialValue当成是下一次执行的起点
+
+        // 封装reduce方法
+        Array.prototype.myReduce=function(func,initialValue){
+            var _arr=this,len=_arr.length,parme2=arguments[1]||window;
+            for(var i=0;i<len;i++){
+                initialValue=func.apply(parme2,[initialValue,_arr[i],i,self])
+            }
+            return initialValue
+        }
+        var lastName1=personArr.myReduce(function(preValue,curValue,index,self){
+            console.log(preValue,curValue,index,self)
+            return preValue
+        },initialValue)
+
+
+
+        //封装取出cookie对象以及值的方法,好好体会！！！！！
+        function getcookie(str){
+            var cook=str.split(";")
+            var cookieObj={};
+            cook.reduce(function(preValue,curValue,index,self){
+                curValue=curValue.split("=");
+                cookieObj[curValue[0]]=curValue[1]
+                console.log(preValue,curValue,curValue[0],curValue[1]);                
+                return preValue
+            },cookieObj)
+            return cookieObj;
+        }
+
+        var cookieObj=getcookie(cookieStr);
+        console.log(cookieObj);
+
+
+        //深度克隆加封装map方法
+        function deepClone(Origin,Target){
+            var toStr=Object.prototype.toString;
+            var arrobj='[object Array]'
+            for(var prop in Origin){
+                if(typeof(Origin)!=null && typeof(Origin)=='object'){
+                    if(toStr.call(Origin[prop])==arrobj){
+                        Target[prop]=[];
+                    }else{
+                        Target[prop]={}
+                    }
+                    deepClone(Origin[prop],Target[prop]);
+                }else{
+                    Target[prop]=Origin[prop];
+                }
+           }
+        }
+
+        Array.prototype.myMap1=function(func){
+            var _arr=this,len=_arr.length,parme2=arguments[1],newArr=[],newArr1=[];
+            for(var i=0;i<len;i++){
+                newArr.push(func.apply(parme2,[_arr[i],i,self]));
+            }
+            deepClone(newArr,newArr1);
+            return newArr1
+        }
+        var mapobj=personArr.myMap1(function(ele,index,self){
+            ele.name=ele.name+10;
+            return ele
+        },{name:'cst'})
+
+
+
+
+
+        //封装some方法
+        Array.prototype.mySome=function(func){
+            var _arr=this,len=_arr.length,flag=false,parme=arguments[1] || window;
+            for(var i=0;i<len;i++){
+                if(func.apply(parme,[_arr[i],i,_arr])){
+                    flag=true;
+                    return flag                    
+                }
+            }
+            return flag
+
+        }
+        flag1=personArr.mySome(function(ele,index,self){
+            return ele.age>50
+        })
+
+
+
+
+
+
+
+
+
+       
+    </script>
+       
+</body>
+</html>

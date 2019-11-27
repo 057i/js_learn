@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    // test功能和match很像，配合描述符和lastIndex一起使用,返回true或者false,需要一直test，游标前进才能匹配全部
+    var str = "abc122123abc237abc123"
+    var reg = /abc/g
+
+    // console.log(reg.test(str), reg.lastIndex)//true 3
+    // console.log(reg.test(str), reg.lastIndex)//true 12
+    // console.log(reg.test(str), reg.lastIndex)//true 18
+
+    //判断匹配个数
+    // var n = 0;
+    // while (reg.test(str)) {
+    //     n++
+    // }
+    // console.log(n)//3
+
+
+    //正则默认贪婪，取消贪婪匹配，test匹配返回的是true或者false,exec返回的是匹配到的每一项
+    var str = "abc122123abc237abc123"
+    var reg = /\d+?/g
+    // console.log(reg.test(str), reg.lastIndex)//true 4
+    // console.log(reg.test(str), reg.lastIndex)//true 5
+    // console.log(reg.test(str), reg.lastIndex)//true 6
+    // console.log(reg.test(str), reg.lastIndex)//true 7
+    // console.log(reg.test(str), reg.lastIndex)//true 8
+    // console.log(reg.test(str), reg.lastIndex)//true 9
+    // console.log(reg.test(str), reg.lastIndex)//true 13
+    // console.log(reg.test(str), reg.lastIndex)//true 14
+
+
+    // console.log(reg.exec(str), reg.lastIndex)
+    // console.log(reg.exec(str), reg.lastIndex)
+    // console.log(reg.exec(str), reg.lastIndex)
+    // console.log(reg.exec(str), reg.lastIndex)
+    // console.log(reg.exec(str), reg.lastIndex)
+    // console.log(reg.exec(str), reg.lastIndex)
+    // console.log(reg.exec(str), reg.lastIndex)
+    // console.log(reg.exec(str), reg.lastIndex)
+
+
+    //改进，输出每一项匹配到的
+    while (reg.exec(str)) {
+        console.log(reg.exec(str), reg.lastIndex)
+    }
+
+
+</script>
+</body>
+</html>

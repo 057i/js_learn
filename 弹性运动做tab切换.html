@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        *{
+            padding:0;
+            margin:0;
+            list-style:none;
+        }
+        body{
+
+        }
+        .con{
+            width:1001px ;
+            height:101px;
+            margin:200px auto;
+            position: relative;/*ul设置成相对定位，然后ul下的背景li做绝对定位，这样就可以让背景跟随他的容器进行定位，如果把所有li设置成绝对定位了，所有li都会挤在一块*/
+        }                       /**/
+        li{
+            width:200px;
+            height:100px;
+            background:pink;
+            border:0.1px cadetblue solid;
+            float: left;
+        }
+        .con>li:last-child{
+            opacity: 0.8;
+            background:orange;
+            position: absolute;
+            left:0px;
+        }
+        ul:after{
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+<ul class="con">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li class="bg"></li>
+</ul>
+<script type="text/javascript">
+    var con=document.getElementsByClassName("con")[0];
+    var lis=document.getElementsByTagName("li");
+    var bg=document.getElementsByClassName("bg")[0];
+    var len=lis.length;
+    var timer;
+    for(var i=0;i<len-1;i++){
+        (function (i) {
+            lis[i].addEventListener('mouseenter',function(){
+                startMove(lis[i],bg)
+            },false)
+        }(i))
+
+    }
+    function getStyle(dom,attr){
+        if(window.getComputedStyle(dom)){
+            return window.getComputedStyle(dom)[attr]
+        }else{
+            return dom.currentStyle[attr]
+        }
+    }
+    function startMove(dom,target){
+        clearInterval(timer);
+        var a=1,//初速度
+            u=0.8,//能量损耗
+            iSpeed=0;
+         timer=setInterval(function(){
+             var targetlen=parseInt(getStyle(target,'left'))
+             a=parseInt(dom.offsetLeft-targetlen)/9;
+             iSpeed+=a;
+             iSpeed*=u;
+             console.log(iSpeed,dom.offsetLeft,target)
+             if(Math.abs(targetlen-dom.offsetLeft)<1&&Math.abs(iSpeed)<5){
+                 target.style.left=dom.offsetLeft+iSpeed+'px';
+                 clearInterval(timer);
+             }else{
+                 target.style.left=target.offsetLeft+iSpeed+'px';
+             }
+         },90)
+    }
+
+
+</script>
+
+</body>
+</html>

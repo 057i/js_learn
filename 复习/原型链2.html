@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        var obj = {}
+        //笔面试掌握的
+        //1.Object.getPrototypeOf(obj)//获取到对象的隐式原型，只有对象能用(万物皆对象，除了null)
+        //2.Object.prototype.isPrototypeOf(对象)  判断当前对象(this)是否在指定对象的原型链上
+        //3.对象 instanceof 函数  判断函数的原型是否在对象的原型链上
+        //4.Object.create(对象)  //创建一个新对象，其隐式原型指向指定对象
+
+
+
+
+
+
+
+        console.log(Object.getPrototypeOf(obj))
+        //Object.getPrototypeOf()是Object上的静态方法，返回对象实例的__proto__
+
+
+        console.log(Object.getPrototypeOf(obj) === obj.__proto__)//true
+
+        console.log(Object.getPrototypeOf(obj).constructor)//因为Object.getPrototypeOf(obj)就是Object.prototype
+        //然后Object.prototype.constructor就是自身，所以是Object
+
+        // 一个构造函数的prototype的constructor是自身
+
+
+
+
+        function A() { }
+        var obj1 = new A();
+        console.log(Object.prototype.isPrototypeOf(obj1))//true，问的是Object.prototype在不在obj1的隐式原型上
+        //因为obj1是自定义函数构造出来的，obj1的__proto__指向自定义函数的原型
+        //obj1.__proto__.__proto__就是Object的prototype
+
+
+        var o = {}
+        console.log(o.isPrototypeOf(obj))//false,问的是o在不在obj的隐式原型上，o是普通对象创建出来的
+
+        console.log(o.__proto__.isPrototypeOf(obj)) //这样就是true，指向Object原型
+        //写法等同于
+        console.log(Object.getPrototypeOf(o).isPrototypeOf(obj))//true,获取到o的隐式原型，就是Object的原型
+
+
+        //可以把几种构造函数都看做成是new Function出来的自定义函数，如Array,String,他们的prototype.__proto__指向Object原型
+        //区别一下
+        console.log(Array.prototype.isPrototypeOf(document.getElementsByTagName("a")))//指向Array的原型（自定义函数原型）
+
+        console.log(Array.prototype.isPrototypeOf(obj))//false
+
+        console.log(Array.prototype.__proto__.isPrototypeOf(obj))//true
+        console.log(Array.prototype.isPrototypeOf([]))//true，用来判断类型（应用）
+
+        console.log(Object.isPrototypeOf(obj))//false
+
+
+
+        // inatanceof判断函数原型是否在对象的原型链上
+        console.log(obj instanceof Object)  //true
+        console.log([] instanceof Array)//true,如果确保页面中没有iframe就可以用这个判断类型
+
+        console.log(Array.isArray([]))//最好的判断数组的方式
+
+
+
+
+
+
+        console.log(obj.toString())//[object Object]
+
+
+        // const a={
+        //     // toString:function(){
+        //     //     console.log(123)
+        //     // },
+        //     get:function(){
+        //         console.log(23)
+        //     }
+        // }
+        // alert(a)
+
+
+
+
+        // Object.create()//创建一个新对象，其隐式原型指向指定对象
+
+        var p = { a: 1, b: 2 }
+        var obj2 = Object.create(p)
+        console.log(obj2.__proto__)//指向p
+        console.log(obj2.__proto__.constructor === Object)//true
+        console.log(obj2.constructor === p.constructor)//true
+
+
+
+
+        var obj3 = Object.create(Object)//写法等同于var obj3={}或者var obj3=new Object()
+
+
+        //骚操作写法
+        var obj4 = Object.create(null)//null是原型链的最顶层
+        //面试：是否所有对象原型链的最终是Object:       不是，Object.create(null),原型链的最终指向null
+
+
+
+        // 对象.hasOwnproperty(属性名)，用来判断对象身上的某个属性是从自身拿的还是从原型链上拿的，
+        //因为在遍历对象元素的时候，会默认的把原型上继承下来的属性也拿来遍历了
+        //例如
+        for (var prop in obj2) {
+            console.log(prop)
+        }
+        //打印1，2
+
+
+
+        // 改写成hasOwnproperty
+        obj2.acb = "fjskdfjsdfkj";
+        for (var prop in obj2) {
+            if (obj2.hasOwnProperty(prop)) {
+                console.log(prop)
+            }
+        }
+        //只打印acb
+
+
+
+
+
+
+
+
+        //实际应用
+        //1.类数组转变成真数组，Array.prototype.slice.call(类数组)或者[].slice.call(类数组)
+        //2.默认情况下，所有的构造函数都继承自Object
+
+
+
+
+        // 拓展圣杯默模式(避免原型链上不必要的继承)
+        function inherit(Origin, target) {
+            function F() { }
+            F.prototype = Origin.prototype;
+            target.prototype = new F();
+            target.prototype.constructor = target//不写这句话的话，target.prototype.constructor会指向Oringin
+            // console.log(target.constructor)
+            // return target
+        }
+        function A() {
+            this.q = 78;
+        }
+        A.prototype.a = function () {
+            console.log(789)
+        }
+        function B() { }
+        inherit(A, B)
+
+        var a = new A()
+        var b = new B()
+        console.log(B.prototype.constructor)//B
+
+
+
+
+
+           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
